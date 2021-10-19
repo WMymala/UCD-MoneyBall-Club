@@ -8,11 +8,7 @@ output: html_document
 
 * https://www.r-project.org/about.html
 
-Example of you can do on R!:
-
 * https://skdeshpande91.github.io/wharton_moneyball/more_resources.html
-
-* https://github.com/WMymala/rNBA/blob/main/2.%20FT%20Comps.Rmd
 
 Downloading R: 
 
@@ -22,17 +18,22 @@ R download mirrors: https://cran.r-project.org/mirrors.html
 
 RStudio download: https://www.rstudio.com/products/rstudio/download
 
-* IDE (Integrated development environments) to work on R code. IDEs are useful for any coding language you are doing since it provides a global environment to keep track of your code, allows you to download packages, auto-fill code, and much more resources to keep you organized! Can also switch themes since default is light mode!
+* IDE (Integrated development environments) to work on R code
 
-# Starting out
+# Creating objects and vectors
+x <- 5
+* Creates an object x with value 5
+* 
+x <- 6
+* Overwrites original x value with value 6
 
-* Script Screen - The windowthat we are on right now. Allows you to type information and code! 
+y <- c(1,2,3,4)
+* Creates a vector of 4 values
+* length() tells us how many elements are in the vector
+* class() tells us the type of element the object is
+* length(y) would output "4"
+* class(y) would output "numeric"
 
-* Console - Window to type commands To remove data, click the broom button at the top of the window
-
-* Environment | History | Tutorial - Window lists all data, values, functions you ran. To remove data, click the broom button at thetop of the window | Allows you to see code you recently ran code | Allows you to download packages to learn how to use R!
-
-* Files | Plots | Packages | Help | Viewer - See files on your computer | Plots - Window where you can view graphs/plots you run in R | Packages - List of bundles code and documents and allows you to run other code that the basic R codes do not allow you to run. | Help - Database to see how to use a certain function or built in dataset that R has use a '?' and type in the function/dataset of inserest to trigger help window. Ex) ?mean
-
-
-
+# Importing datasets 
+* This is the majority of how we will be using data in R, rather than just creating the datasets
+* To import datasets, go to File -> Import Dataset -> Choose either From Excel or From Stata depending on the type of dataset you are using
