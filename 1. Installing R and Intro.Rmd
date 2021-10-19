@@ -23,3 +23,16 @@ R download mirrors: https://cran.r-project.org/mirrors.html
 RStudio download: https://www.rstudio.com/products/rstudio/download
 
 * IDE (Integrated development environments) to work on R code. IDEs are useful for any coding language you are doing since it provides a global environment to keep track of your code, allows you to download packages, auto-fill code, and much more resources to keep you organized! Can also switch themes since default is light mode!
+
+# Starting out
+
+* Script Screen - The windowthat we are on right now. Allows you to type information and code! 
+
+* Console - Window to type commands To remove data, click the broom button at the top of the window
+
+* Environment | History | Tutorial - Window lists all data, values, functions you ran. To remove data, click the broom button at thetop of the window | Allows you to see code you recently ran code | Allows you to download packages to learn how to use R!
+
+* Files | Plots | Packages | Help | Viewer - See files on your computer | Plots - Window where you can view graphs/plots you run in R | Packages - List of bundles code and documents and allows you to run other code that the basic R codes do not allow you to run. | Help - Database to see how to use a certain function or built in dataset that R has use a '?' and type in the function/dataset of inserest to trigger help window. Ex) ?mean
+
+
+
