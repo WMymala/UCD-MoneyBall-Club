@@ -1,30 +1,21 @@
 ---
 title: "1. Installing R and Intro"
 author: "Walter Mymala, Mihir Kulkarni"
-date: "10/18/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# What is R?
 
-## R Markdown
+* https://www.r-project.org/about.html
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+* https://skdeshpande91.github.io/wharton_moneyball/more_resources.html
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Downloading R: 
 
-```{r cars}
-summary(cars)
-```
+R download mirrors: https://cran.r-project.org/mirrors.html
 
-## Including Plots
+* Offical link to download coding language to your computer
 
-You can also embed plots, for example:
+RStudio download: https://www.rstudio.com/products/rstudio/download
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+* IDE (Integrated development environments) to work on R code
