@@ -357,12 +357,8 @@ pre code {
 <div id="what-is-r" class="section level1">
 <h1>What is R?</h1>
 <ul>
-<li><a href="https://www.r-project.org/about.html" class="uri">https://www.r-project.org/about.html</a></li>
-</ul>
-<p>Example of you can do on R!:</p>
-<ul>
+<li><p><a href="https://www.r-project.org/about.html" class="uri">https://www.r-project.org/about.html</a></p></li>
 <li><p><a href="https://skdeshpande91.github.io/wharton_moneyball/more_resources.html" class="uri">https://skdeshpande91.github.io/wharton_moneyball/more_resources.html</a></p></li>
-<li><p><a href="https://github.com/WMymala/rNBA/blob/main/2.%20FT%20Comps.Rmd" class="uri">https://github.com/WMymala/rNBA/blob/main/2.%20FT%20Comps.Rmd</a></p></li>
 </ul>
 <p>Downloading R:</p>
 <p>R download mirrors: <a href="https://cran.r-project.org/mirrors.html" class="uri">https://cran.r-project.org/mirrors.html</a></p>
@@ -370,9 +366,7 @@ pre code {
 <li>Offical link to download coding language to your computer</li>
 </ul>
 <p>RStudio download: <a href="https://www.rstudio.com/products/rstudio/download" class="uri">https://www.rstudio.com/products/rstudio/download</a></p>
-<ul>
-<li>IDE (Integrated development environments) to work on R code. IDEs are useful for any coding language you are doing since it provides a global environment to keep track of your code, allows you to download packages, auto-fill code, and much more resources to keep you organized! Can also switch themes since default is light mode!</li>
-</ul>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD * IDE (Integrated development environments) to work on R code. IDEs are useful for any coding language you are doing since it provides a global environment to keep track of your code, allows you to download packages, auto-fill code, and much more resources to keep you organized! Can also switch themes since default is light mode!</p>
 </div>
 <div id="starting-out" class="section level1">
 <h1>Starting out</h1>
@@ -417,7 +411,7 @@ a - b   # subtraction</code></pre>
 <pre class="r"><code>abs(-9)</code></pre>
 <pre><code>## [1] 9</code></pre>
 <p>Working directory: “File path on your computer that sets the default location of any files you read into R” (Google). By default, the working directory for R your R file is the directory that contains the Rmd or Rscript document</p>
-<pre class="r"><code># setwd(&#39;/Users/nhy163/Documents/Alex/Teaching/first_project&#39;)
+<pre class="r"><code># setwd(&#39;/Users/___/Documents/____/____/____&#39;)
 getwd() # prints directory of where the file is</code></pre>
 <pre><code>## [1] &quot;/Users/yeezywally_510/Desktop/MoneyBall/UCD-MoneyBall-Club-2021-2022&quot;</code></pre>
 <p>Reading in datasets. Datasets are tables or places where information/data is stored for someone to do data analysis on. There are multiple types of datasets in R that can be read:</p>
@@ -430,7 +424,10 @@ getwd() # prints directory of where the file is</code></pre>
 </ul>
 <pre class="r"><code># .csv and .txt files
 # load() for .RData
-# read.csv() a specific case of read.table()</code></pre>
+# read.table() 
+?read.table
+# read.csv() a specific case of read.table()
+?read.csv</code></pre>
 <pre class="r"><code>readxl::read_excel # reading in excel file</code></pre>
 <pre><code>## function (path, sheet = NULL, range = NULL, col_names = TRUE, 
 ##     col_types = NULL, na = &quot;&quot;, trim_ws = TRUE, skip = 0, n_max = Inf, 
@@ -444,7 +441,7 @@ getwd() # prints directory of where the file is</code></pre>
 ##         n_max = n_max, guess_max = guess_max, progress = progress, 
 ##         .name_repair = .name_repair, format = format)
 ## }
-## &lt;bytecode: 0x7fef46826598&gt;
+## &lt;bytecode: 0x7fdbdda0e240&gt;
 ## &lt;environment: namespace:readxl&gt;</code></pre>
 <pre class="r"><code># .xls
 library(&quot;readxl&quot;) # load library required to read excel, will touch on libraries later!
