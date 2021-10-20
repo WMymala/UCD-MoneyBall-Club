@@ -83,8 +83,11 @@ Reading in datasets. Datasets are tables or places where information/data is sto
 
 ```{r}
 # .csv and .txt files
-load() # for .RData
-read.csv() # a specific case of read.table()
+# load() for .RData
+# read.table() 
+?read.table
+# read.csv() a specific case of read.table()
+?read.csv
 ```
 
 ```{r}
