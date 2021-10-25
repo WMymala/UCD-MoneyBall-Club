@@ -38,7 +38,7 @@ RStudio download: https://www.rstudio.com/products/rstudio/download
 
 We can execute R code in the document with code chunks
 ```{r}
-x <- 218 # Making variables: Equivalent to x = 5
+x <- 5 # Making variables: Equivalent to x = 5
 x + 238 # you can also run code in console as well!
 ```
 
