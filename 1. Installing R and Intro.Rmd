@@ -62,6 +62,10 @@ x <- 6 # Overwrites original x value with value 6
 y <- c(1,2,3,4) # c() function creates a vector of 4 values
 length(y) #  tells us how many elements are in the vector, would output "4"
 class(y) # tells us the type of element the object is, would output "numeric"
+head(y) # prints first 6 elements of an object
+tail(y) # prints last 6 elements of an object
+head(y, n = 1) # adding n = # prints however many first or last numbers you specify
+tail(y, n = 2) 
 ```
 
 Built in functions: https://www.javatpoint.com/r-built-in-functions
