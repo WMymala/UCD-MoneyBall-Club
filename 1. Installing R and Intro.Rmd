@@ -55,10 +55,11 @@ a / b	# division
 6 %/% 4 # integer division (division answer w/o remainder), 8 %/% 3 is 2
 ```
 
+Simple Vector
 ```{r}
 x <- 6 # Overwrites original x value with value 6
 
-y <- c(1,2,3,4) # Creates a vector of 4 values
+y <- c(1,2,3,4) # c() function creates a vector of 4 values
 length(y) #  tells us how many elements are in the vector, would output "4"
 class(y) # tells us the type of element the object is, would output "numeric"
 ```
@@ -69,6 +70,28 @@ log(2)
 factorial(5)
 exp(log(7))
 abs(-9)
+```
+
+Basic plots:
+```{r}
+D <- mtcars # loading in built-in dataset in R and setting it as variable D. R has a bunch of built-in ones
+data() # check built-in data sets R has 
+View(mtcars) # see which variables and dat is in mtcars
+
+# Scatterplot 
+plot(D$mpg, D$hp) # plot of mpg against hp(gross horsepower)
+plot(D$mpg, D$hp, xlab = "Miles Per Gallon", ylab = "Horsepower", col = ifelse(D$mpg > 20, "#1b6618", "tomato3")) # all you need is your data to make basic plots, but adding additional info will help people visualize your values better
+abline(v = 20.09062, col="purple") # adds straight lines to any plot. mean(D$hp) is 20.09062
+legend("topright", legend = c("mpg > 20", "mpg < 20"), col=c("#1b6618", "tomato3"), pch = 1)
+
+# Histogram 
+hist(D$mpg, main = "Histogram of Motor Trend Car Road Tests mpg", xlab = "Miles Per Gallon")
+
+# Boxplot
+boxplot(D$mpg, main = "Histogram of Motor Trend Car Road Tests mpg", ylab = "Miles Per Gallon")
+
+# Normal QQ Plots - determines if data is close to being normal distribution
+qqnorm(D$mpg)
 ```
 
 Working directory: "File path on your computer that sets the default location of any files you read into R" (Google). By default, the working directory for R your R file is the directory that contains the Rmd or Rscript document
