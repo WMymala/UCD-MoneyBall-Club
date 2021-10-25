@@ -38,14 +38,14 @@ RStudio download: https://www.rstudio.com/products/rstudio/download
 
 We can execute R code in the document with code chunks
 ```{r}
-x <- 218 # Making variables: Equivalent to x = 5
+x <- 218 # Making variables: Equivalent to x = 218
 x + 238 # you can also run code in console as well!
 ```
 
 Here are the operators in R: https://www.statmethods.net/management/operators.html 
 
 ```{r}
-a = 10
+a = 10 # Creates an object x with value 10
 b = 9
 a - b	# subtraction
 a * b	# multiplication
@@ -53,6 +53,14 @@ a / b	# division
 5 ^ 2 # or **	exponentiation
 9 %% 6	# modulus (remainder value of division), 5 %% 2 is 1
 6 %/% 4 # integer division (division answer w/o remainder), 8 %/% 3 is 2
+```
+
+```{r}
+x <- 6 # Overwrites original x value with value 6
+
+y <- c(1,2,3,4) # Creates a vector of 4 values
+length(y) #  tells us how many elements are in the vector, would output "4"
+class(y) # tells us the type of element the object is, would output "numeric"
 ```
 
 Built in functions: https://www.javatpoint.com/r-built-in-functions
@@ -70,8 +78,13 @@ getwd() # prints directory of where the file is
 ```
 
 
-Reading in datasets. Datasets are tables or places where information/data is stored for someone to do data analysis on. There are multiple types of datasets in R that can be read:
- 
+# Importing/Reading in datasets. 
+* Datasets are tables or places where information/data is stored for someone to do data analysis on. There are multiple types of datasets in R that can be read:
+
+* This is the majority of how we will be using data in R, rather than just creating the datasets
+
+* To import datasets, go to File -> Import Dataset -> Choose either From Excel or From Stata depending on the type of dataset you are using
+
 * .RData : binary file written by R
 * .csv
 * .txt
@@ -95,13 +108,9 @@ library("readxl") # load library required to read excel, will touch on libraries
 Excel <- read_excel("/Users/yeezywally_510/Documents/ARE 115A/KIDS Data.xlsx")
 ```
 
-# More Resources:
 
-* R for data science textbook - https://r4ds.had.co.nz/ 
 
-* Exploratory Data Analysis with R - https://bookdown.org/rdpeng/exdata/ 
 
-* Most important: For projects and code in general, Google and StackOverflow are your best friend! Web scraping data for projects is great too!
 
 
 
