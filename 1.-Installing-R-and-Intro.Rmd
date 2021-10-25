@@ -79,8 +79,8 @@ abs(-9)
 Basic plots:
 ```{r}
 D <- mtcars # loading in built-in dataset in R and setting it as variable D. R has a bunch of built-in ones
-data() # check built-in data sets R has 
-View(mtcars) # see which variables and dat is in mtcars
+# data() check built-in data sets R has 
+# View(mtcars) see which variables and dat is in mtcars
 
 # Scatterplot 
 plot(D$mpg, D$hp) # plot of mpg against hp(gross horsepower)
@@ -101,7 +101,7 @@ qqnorm(D$mpg)
 Working directory: "File path on your computer that sets the default location of any files you read into R" (Google). By default, the working directory for R your R file is the directory that contains the Rmd or Rscript document
 ```{r}
 # setwd('/Users/___/Documents/____/____/____')
-getwd() # prints directory of where the file is
+# getwd()  prints directory of where the file is
 ```
 
 
