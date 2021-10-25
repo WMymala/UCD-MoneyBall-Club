@@ -45,8 +45,8 @@ x + 238 # you can also run code in console as well!
 Here are the operators in R: https://www.statmethods.net/management/operators.html 
 
 ```{r}
-a = 10 # Creates an object x with value 10
-b = 9
+a = 10 # Creates an object names a with value 10
+b = 9 
 a - b	# subtraction
 a * b	# multiplication
 a / b	# division
@@ -122,7 +122,7 @@ Working directory: "File path on your computer that sets the default location of
 # .csv and .txt files
 # load() for .RData
 # read.table() 
-?read.table
+?read.table # '?' allows you toask r for help on functions
 # read.csv() a specific case of read.table()
 ?read.csv
 ```
@@ -135,6 +135,13 @@ library("readxl") # load library required to read excel, will touch on libraries
 Excel <- read_excel("/Users/yeezywally_510/Documents/ARE 115A/KIDS Data.xlsx")
 ```
 
+# More Resources:
+
+* R for data science textbook - https://r4ds.had.co.nz/ 
+
+* Exploratory Data Analysis with R - https://bookdown.org/rdpeng/exdata/ 
+
+* Most important: For projects and code in general, Google and StackOverflow are your best friend! Web scraping data for projects is great too!
 
 
 
