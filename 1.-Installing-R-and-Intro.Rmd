@@ -145,7 +145,7 @@ install.packages("<the package's name>")
 library("<the package's name>")
 
 #some popular packages include ggplot2 to make graphing easier, data.table and dyplr to make data manipulation easier, and tiydr to help clean data
-#for economics we use a lot of lmtest to regress data and 
+#for economics we use a lot of lmtest to help regress data
 
 # More Resources:
 
