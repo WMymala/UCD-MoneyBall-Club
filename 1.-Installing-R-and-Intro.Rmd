@@ -61,6 +61,7 @@ Simple Vector
 x <- 6 # Overwrites original x value with value 6
 
 y <- c(1,2,3,4) # c() function creates a vector of 4 values
+y <- c("1","2","3","4") # putting quotation marks creates a vector of strings
 length(y) #  tells us how many elements are in the vector, would output "4"
 class(y) # tells us the type of element the object is, would output "numeric"
 head(y) # prints first 6 elements of an object
@@ -135,6 +136,16 @@ readxl::read_excel # reading in excel file
 library("readxl") # load library required to read excel, will touch on libraries later!
 Excel <- read_excel("/Users/yeezywally_510/Documents/ARE 115A/KIDS Data.xlsx")
 ```
+
+# Packages 
+
+#installing packages adds many useful functions to R
+
+install.packages("<the package's name>")
+library("<the package's name>")
+
+#some popular packages include ggplot2 to make graphing easier, data.table and dyplr to make data manipulation easier, and tiydr to help clean data
+#for economics we use a lot of lmtest to regress data and 
 
 # More Resources:
 
