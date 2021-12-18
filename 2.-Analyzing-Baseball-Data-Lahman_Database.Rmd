@@ -1,30 +1,21 @@
 ---
 title: "2.-Analyzing-Baseball-Data-Lahman_Database"
-author: "Walter Mymala"
-date: "12/18/2021"
+author: "Walter Mymala, Mihir Kulkarni"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+Lahman is a database w/ pitching, hitting, and fielding statistics for the entire history of professional baseball from 1871 to the current. csvs in Lahman on pp. 4 Analyzing Baseball Data.
+
+```{r}
+## install.packages("Lahman"); Install a library. Libraries have additional fxns and tricks that regular R cannot run
+library(Lahman) # runs librar(ies) in file
+library(tidyverse) # important library for data analysis
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+# piping fxn (%>%) allos us to write neater code for functions
+Master %>% head(1) # biographic info. head(Master, 1) without using piping fxn
+Batting %>% head(5) # .csv with seasonal batting stats. Try to run Pitching .csv and Fielding .csv on your own
+Teams %>% head(5) # seasonal data at the team level going back to 1871.
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
