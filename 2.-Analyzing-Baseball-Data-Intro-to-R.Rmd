@@ -1,0 +1,38 @@
+---
+title: "2.-Analyzing-Baseball-Data-Lahman_Database"
+author: "Walter Mymala, Mihir Kulkarni"
+output: html_document
+---
+
+# Intro
+
+Lahman is a database w/ pitching, hitting, and fielding statistics for the entire history of professional baseball from 1871 to the current. csvs in Lahman on pp. 4 Analyzing Baseball Data.
+
+```{r}
+## install.packages("Lahman"); Install a library. Libraries have additional fxns and tricks that regular R cannot run
+library(Lahman) # runs librar(ies) in file
+library(tidyverse) # important library for data analysis. dplyr good for extracting data and ggplot good for visualizing observations
+```
+
+```{r}
+# piping fxn (%>%) allows us to write neater code for nested functions
+Master %>% head(1) # biographic info. head(Master, 1) without using piping fxn
+Batting %>% head(5) # .csv with seasonal batting stats. Try to run Pitching .csv and Fielding .csv on your own
+Teams %>% head(5) # seasonal data at the team level going back to 1871.
+```
+
+```{r}
+spahn <- read.csv("/Users/yeezywally_510/Desktop/MoneyBall/spahn.csv") # read dataset
+#View(spahn_data)
+class(spahn) # dataframe (df) - rectangular table of data, rows usually correspond to different observations, and columns of the table correspond to different variables collected on the observations.
+```
+
+dplyr functions: https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html
+```{r}
+spahn %>% slice(1:3) %>% select(1:10) # == select(slice(spahn, 1:3), 1:10); shows first three rows and columns 1 though 10 of spahn df
+spahn %>% slice(1:10) %>% select(Age, W, L, ERA) # custom select columns 
+```
+
+
+
+
