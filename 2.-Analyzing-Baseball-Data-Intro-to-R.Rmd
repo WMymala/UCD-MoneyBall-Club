@@ -75,3 +75,137 @@ spahn %>%
             mean_FIP = mean(FIP))
 ```
 
+# 2.5 Vector Functions
+
+```{r}
+# Wins and Losses from 1946 to 1952, his years in Boston
+W <- c(8, 21, 15, 21, 21, 22, 14)
+L <- c(5, 10, 12, 14, 17, 14, 19)
+
+Win.Pct <- 100 * W / (W + L) # vector combining 2 vectors above
+
+Year <- seq(from = 1946, to = 1952) # seq() runs patterned data; 1946 : 1952 is also valid
+
+Age <- Year - 1921 # Spahn was born in 1921
+
+plot(Age, Win.Pct) 
+```
+
+```{r}
+# Vector Index
+W[c(1, 2, 5)] # extract portions of vectors
+W[1:4]
+W[-c(1, 6)] # w/ minus index, we remove vector indicies
+
+# Logical variable, either have >, < or =
+Win.Pct > 60 # prints TRUE or FALSE
+Win.Pct == max(Win.Pct)
+Year[W + L > 30]
+```
+
+# 2.6 Objects and Containers in R
+
+String variables like the team names and players are stored as that are represented by letters enclosed by double quotes (characters) and numbers (integers). 
+
+As an example, we wish to explore information about the World Series in the years 2008 through 2017
+```{r}
+# 5 new vectors, 
+Year <- 2008 : 2017 
+NL <- c("PHI", "PHI", "SFN", "SLN", "SFN",
+        "SLN", "SFN", "NYN", "CHN", "LAN")
+AL <- c("TBA", "NYA", "TEX", "TEX", "DET",
+        "BOS", "KCA", "KCA", "CLE", "HOU")
+Winner <- c("NL", "AL", "NL", "NL", "NL",
+            "AL", "NL", "AL", "NL", "AL")
+N_Games <- c(5, 6, 5, 7, 4, 7, 7, 5, 7, 7)
+
+# Tibble and dataframes are both 2D data structures. Tibble is a dataframe that makes using tidyverse easier and loads data faster than df
+WS_results <- tibble(
+  Year = Year, NL_Team = NL, AL_Team = AL,
+  N_Games = N_Games, Winner = Winner)
+WS_results
+```
+
+```{r}
+# # grep() matches patterns in the values
+grep("NY", c(AL, NL), value = TRUE) 
+
+# summarize() will create a new data frame with group_by() which will group the data frame for each World Series league winner (variable Winner). We count the rows by use of the n() function.
+WS_results %>%
+  group_by(Winner) %>%
+  summarize(N = n()) -> WS
+WS
+
+# bar graph showing frequencies of code directly above
+ggplot(WS, aes(x = Winner, y = N)) +
+  geom_col()
+```
+
+```{r}
+# factors - special way of representing character (categorical) data
+WS_results %>%
+  group_by(NL_Team) %>%
+  summarize(N = n())
+
+# Similar to lines 123-126 but now we redefine the NL_Team variable by making NL_Team values into factors. Factors help the data not be put into alphabetical order and can omit values that are not part of the levels into an NA value
+WS_results <- WS_results %>%
+  mutate(NL_Team = factor(NL_Team,
+                          levels = c("NYN", "PHI", "CHN",
+                                     "SLN", "LAN", "SFN")))
+WS_results
+
+# similar to lines 146-148 but now teams listed in order specified by factor()
+WS_results %>%
+  group_by(NL_Team) %>%
+  summarize(N = n())
+```
+
+```{r}
+# Lists - object in R that allows you to store elements of different types like integers, characters, even other vectors 
+world_series <- list(Winner = Winner, Number.Games = N_Games,
+                     Seasons = "2008 to 2017")
+world_series
+
+# accessing elements in a list
+world_series$Number.Games # same as world_series[[2]] or world_series["Number.Games"]
+world_series$Number.Games[10] # access last element of Number.Games
+```
+
+# R functions - used to implement implement specific computations or graphs of interest that are not in R libraries or base R
+```{r}
+# Function to compute a player’s home run rates for a collection of seasons; returns a list. One inputs a vector age of player ages, a vector hr of home run counts, and a vector ab of at-bats
+hr_rates <- function(age, hr, ab) {
+  rates <- round(100 * hr / ab, 1) # rounds hr rates to one digit
+  list(x = age, y = rates) # fxns return last line of code in itself unless return command is used
+}
+
+# data for Mickey Mantle's(NY Yankees legend) seasons from 1951 to 1961
+HR <- c(13, 23, 21, 27, 37, 52, 34, 42, 31, 40, 54)
+AB <- c(341, 549, 461, 543, 517, 533, 474, 519, 541, 527, 514)
+Age <- 19 : 29
+Mantle_HRrates <- hr_rates(Age, HR, AB)
+names(Mantle_HRrates) <- c("Age", "HR_rates") # rename list elements
+Mantle_HRrates
+
+plot(hr_rates(Age, HR, AB)) # Mantle’s home run rates rose steadily in the first six seasons
+```
+
+# 2.10 Splitting, Applying, and Combining Data
+```{r}
+# We want to answer: “Who hit the most home runs in the 1960s?”. We can filter out data to only include the 1960s
+Batting %>%
+  filter(yearID >= 1960, yearID <= 1969) ->  Batting_60 
+
+# split the data frame by each player id, and then compute the sum of home runs for each player
+Batting_60 %>%
+  group_by(playerID) %>%
+  summarize(HR = sum(HR)) -> hr_60 # Batting_60 now computes total number of home runs for each player in the data frame
+
+# sort data so best HR hitters are on top
+hr_60 %>%
+  arrange(desc(HR)) -> hr_60
+head(hr_60, 4) # Harmon Killebrew, Hank Aaron, Willie Mays, and Frank Robinson were the top HR hitters in the 1960s
+```
+
+
+
