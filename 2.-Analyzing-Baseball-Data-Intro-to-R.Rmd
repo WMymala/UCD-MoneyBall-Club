@@ -4,11 +4,15 @@ author: "Walter Mymala, Mihir Kulkarni"
 output: html_document
 ---
 
+Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
+
 Link for the book if you really want to read it (totally optional): https://libgen.is/book/index.php?md5=AA1AE52B2BA2B01497FACAD2B7E4807F
 
 # Intro
 
 Lahman is a database w/ pitching, hitting, and fielding statistics for the entire history of professional baseball from 1871 to the current. csvs in Lahman on pp. 4 Analyzing Baseball Data.
+
+# Chapter 2 of Book 
 
 # 2.3 Tidyverse
 
