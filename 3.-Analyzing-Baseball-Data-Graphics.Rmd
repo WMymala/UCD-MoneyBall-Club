@@ -4,4 +4,81 @@ author: "Walter Mymala, Mihir Kulkarni"
 output: html_document
 ---
 
+Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
+
+# Chapter 3
+
+```{r}
+library(tidyverse)
+
+# Stats of HOF players excluding pitchers
+hof <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/UCD-MoneyBall-Club-2021-2022/baseball_R-master/data/hofbatting.csv")
+```
+
+HOFs played in different baseball eras. We split player's mid-career to see which era they fall under. There are 7 different eras the book defines:
+
+* “19th Century” (up to the 1900 season), “Dead Ball” (1901 through 1919), “Lively Ball” (1920 though 1941), “Integration” (1942 through 1960), “Expansion” (1961 through 1976), “Free Agency” (1977 through 1993), and “Long Ball” (after 1993)
+
+```{r}
+# creates 2 new variables (MidCareer and Era) to classify which era each hof batter played for
+hof <- hof %>%
+  mutate(MidCareer = (From + To) / 2,
+         Era = cut(MidCareer,
+                   breaks = c(1800, 1900, 1919, 1941,
+                              1960, 1976, 1993, 2050),
+                   labels = c("19th Century", "Dead Ball",
+                              "Lively Ball", "Integration",
+                              "Expansion", "Free Agency",
+                              "Long Ball")))
+
+hof_eras <- summarize(group_by(hof, Era), N = n())
+hof_eras # see how many players played in which eras
+```
+
+```{r}
+# Graphs for categorical variables - Bar Graph & Dot Plot
+
+# aes() function defines aesthetics & geom_bar() makes a bar graph
+ggplot(hof, aes(x = Era)) + geom_bar()
+
+# adding axes labels and title
+ggplot(hof, aes(Era)) +
+  geom_bar() +
+  xlab("Baseball Era") +
+  ylab("Frequency") +
+  ggtitle("Era of the Nonpitching Hall of Famers") 
+
+# Dot Plot - use geom_point() to display alternative graphical displays for a table of frequencies of a character variable
+ggplot(hof_eras, aes(Era, N)) +
+  geom_point() +
+  xlab("Baseball Era") +
+  ylab("Frequency") +
+  ggtitle("Era of the Nonpitching Hall of Famers") +
+  coord_flip()
+```
+
+```{r}
+# Graphs for categorical variables - 1D scatterplot & Histogram
+
+# 1D scatterplot - Use geom_jitter() for a number line graph, where the values of the statistics are plotted over a number line ranging over all possible values of the variable.
+ggplot(hof, aes(x = OPS, y = 1)) +
+  geom_jitter(height = 0.6) + ylim(-1, 3) +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) +
+  coord_fixed(ratio = 0.03) # In the df hof, the OPS is mapped to the x aesthetic and the dummy variable y is set to a constant value. The theme() elements are chosen to remove the tick marks, text, and title from the y-axis.
+
+# histogram - Use geom_histogram(), where values are grouped into bins of equal width and bin frequencies are non-overlapping bars over the bins
+ggplot(hof, aes(x = OPS)) +
+   geom_histogram()
+
+# An issue w/ histograms is of bin #s, but geom_histogram() will usually make good choices for the bins to display good data distribution. However, you can customize bin #s in geom_histogram() w/ argument "breaks". Lines of the bars are colored blue and the bars are filled in white
+ggplot(hof, aes(x = OPS)) +
+  geom_histogram(breaks = seq(0.4, 1.2, by = 0.1),
+                 color = "blue", fill = "white")
+```
+
+# 3.5 Two Numeric Variables
+
+
 
