@@ -187,3 +187,55 @@ ggplot(HRdata, aes(x = Age, y = CHR, linetype = Player)) +
 
 # The 1998 Home Run Race
 
+We will graphically view the famous home run duel between Mark McGwire and Sammy Sosa
+```{r}
+# all1998.csv contains all the play-by-play data for the 1998 season. fields.csv contains the names of all variables in the play-by-play file
+fields <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/baseball_R-master/data/fields.csv")
+data1998 <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/baseball_R-master/data/all1998.csv",
+                     col_names = pull(fields, Header))
+
+# BAT_ID gives the identification code for the player who is batting. filter() allows us to find id code where nameFirst = "Sammy" and nameLast = "Sosa" and same thing for McGuire
+sosa_id <- Master %>%
+  filter(nameFirst == "Sammy", nameLast == "Sosa") %>%
+  pull(retroID)
+mac_id <- Master %>%
+  filter(nameFirst == "Mark", nameLast == "McGwire") %>%
+  pull(retroID)
+
+# Now that we have the player id codes, we extract McGwire’s and Sosa’s plate appearance data from the play-by-play data frame data1998
+ hr_race <- data1998 %>%
+  filter(BAT_ID %in% c(sosa_id, mac_id))
+```
+
+For each player, we are interested in collecting the current number of home runs hit for each plate appearance and graphing the date against the home run count. For each player, the two important variables are the date and the home run count. We write a new function cum_hr() that will extract these two variables given a player’s play-by-play batting data
+```{r}
+# GAME_ID identifies the game location and date (e.g. ARI199805110 indicates this particular play occurred at the game played in Arizona on May 11, 1998). We select the 4th through 11th characters of this string variable and assign this date to the variable Date w/ str_sub(). ymd() function converts the date to the more readable “year-month-day” format. arrange() sorts play-by- play data from the beginning to end of the season. EVENT_CD contains the outcome of the batting play (EVENT_CD value of 23 indicates that a HR has been hit). We define a new variable HR to be either 1 or 0 depending if a home run occurred, and the new variable cumHR records the cumulative number of home runs hit in the season using the cumsum(). The output of the function is a new data frame containing each date and the cumulative number of home runs to date for all plate appearances during the season
+library(lubridate)
+cum_hr <- function(d) {
+  d %>%
+    mutate(Date = ymd(str_sub(GAME_ID, 4, 11))) %>%
+    arrange(Date) %>%
+    mutate(HR = ifelse(EVENT_CD == 23, 1, 0),
+           cumHR = cumsum(HR)) %>%
+    select(Date, cumHR)
+}
+
+# map_df() iterates cum_hr() twice, once on Sosa’s batting data and once on McGwire’s batting data
+hr_ytd <- hr_race %>%
+  split(pull(., BAT_ID)) %>%
+  map_df(cum_hr, .id = "BAT_ID") %>%
+  inner_join(Master, by = c("BAT_ID" = "retroID"))
+```
+
+Graph of the 1998 home run race between Sammy Sosa and Mark McGwire.
+```{r}
+# graph - geom_line() constructs a graph of the cumulative home run count against the date. geom_hline() adds a horizontal line at the home run value of 62 and annotate() is applied to place the text string “62” above this plotted line
+ggplot(hr_ytd, aes(Date, cumHR, linetype = nameLast)) +
+  geom_line() +
+  geom_hline(yintercept = 62, color = "blue") +
+  annotate("text", ymd("1998-04-15"), 65,
+           label = "62", color = "blue") +
+  ylab("Home Runs in the Season")
+```
+
+
