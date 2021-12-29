@@ -1,0 +1,30 @@
+---
+title: "4.-Analyzing-Baseball-Data-The-Relation-Between-Runs-and-Wins"
+author: "Walter Mymala, Mihir Kulkarni"
+output: html_document
+---
+
+Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
+
+# Chapter 4
+
+Stats really don't mean anything if you can't win. You cannot just compare player stats to determine who is better. If that was the case, Russell Westbrook would be the GOAT but in reality he is a rebound and assist merchant, aka a FRAUD.
+
+# 4.2 The Teams Table in the Lahman Database
+
+We want to relate the proportion of wins with the runs scored and runs allowed for all of the teams. The relevant fields of interest in this table are the number of games played G, the number of team wins W, the number of losses L, the total number of runs scored R, and the total number of runs allowed RA.
+```{r}
+library(tidyverse)
+library(Lahman)
+tail(Teams, 3) # Teams table shows seasonal stats for MLB teams going back to the first professional season in 1871
+```
+
+```{r}
+# new data frame w/ 5 columns of interest. filter() here focuses on seasons since 2001
+my_teams <- Teams %>%
+  filter(yearID > 2000) %>%
+  select(teamID, yearID, lgID, G, W, L, R, RA)
+my_teams %>%
+  tail()
+```
+
