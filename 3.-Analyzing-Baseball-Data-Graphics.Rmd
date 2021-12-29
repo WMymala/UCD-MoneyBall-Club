@@ -12,7 +12,7 @@ Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
 library(tidyverse)
 
 # Stats of HOF players excluding pitchers
-hof <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/UCD-MoneyBall-Club-2021-2022/baseball_R-master/data/hofbatting.csv")
+hof <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/baseball_R-master/data/hofbatting.csv")
 ```
 
 HOFs played in different baseball eras. We split player's mid-career to see which era they fall under. There are 7 different eras the book defines:
@@ -57,10 +57,11 @@ ggplot(hof_eras, aes(Era, N)) +
   coord_flip()
 ```
 
+OPS - Measures the ability to get on base. Divide the total number of hits, walks, and times hits by a pitch by the number of times at bat plus walks. 
 ```{r}
 # Graphs for categorical variables - 1D scatterplot & Histogram
 
-# 1D scatterplot - Use geom_jitter() for a number line graph, where the values of the statistics are plotted over a number line ranging over all possible values of the variable.
+# 1D scatterplot (different from scatterplot!)- Use geom_jitter() for a number line graph, where the values of the statistics are plotted over a number line ranging over all possible values of the variable.
 ggplot(hof, aes(x = OPS, y = 1)) +
   geom_jitter(height = 0.6) + ylim(-1, 3) +
   theme(axis.title.y = element_blank(),
@@ -80,5 +81,109 @@ ggplot(hof, aes(x = OPS)) +
 
 # 3.5 Two Numeric Variables
 
+Scatterplot is for graphing two numeric variables. geom_point() makes the plot and geom_smooth() shows association btw the 2 variables. We now compare MidCareer and OPS for better visualization.
+```{r}
+# scatterplot
+ggplot(hof, aes(MidCareer, OPS)) +
+  geom_point() +
+  geom_smooth()
 
+library(ggrepel) # for geom_text_repel() to see outliers
+ggplot(hof, aes(MidCareer, OPS)) +
+  geom_point() +
+  geom_smooth() +
+  geom_text_repel(data = filter(hof, OPS > 1.05 | OPS < .5),
+             aes(MidCareer, OPS, label = Player))
+```
+
+```{r}
+# Building a graph, step-by-step (OPS - the ability to get on base, and SLG - ability to advance runners already on base)
+(p <- ggplot(hof, aes(OBP, SLG)) + geom_point()) #  The outlier in the bottom-left makes points fall in a small region of the plot
+
+# xlim() and ylim() functions change the limits of horizontal and vertical axes. New choices of the limits, (0.25, 0.50) for the horizontal and (0.28, 0.75) for the vertical, remove the outlier and allow for more space in the upper-left section of the graph for labels
+(p <- p +
+   xlim(0.25, 0.50) + ylim(0.28, 0.75) +
+   xlab("On Base Percentage") +
+   ylab("Slugging Percentage"))
+
+# or we could use scale_x_continuous() and scale_y_continuous() to do the same thing
+# p <- p +
+#   scale_x_continuous("On Base Percentage",
+#                      limits = c(0.25, 0.50)) +
+#   scale_y_continuous("Slugging Percentage",
+#                      limits = c(0.28, 0.75))
+```
+
+A good measure of batting performance is the OPS statistic defined by OPS = OBP + SLG
+```{r}
+# To evaluate hitters in our graph on the basis of OPS, we draw constant values of OPS on the graph. We wish to draw a line where OPS = 0.7 to OPS = 1
+(p <- p + geom_abline(slope = -1,
+                      intercept = seq(0.7, 1, by = 0.1)))
+
+# label the lines; the three arguments in annotate() are the x location and y location where the text is to be drawn, and label is the vector of strings of text to be displayed
+p + annotate("text",
+             x = rep(.27, 4) , y = c(.42, .52, .62, .72),
+             label = paste("OPS = ",
+                     c(0.7, 0.8, 0.9, 1.0)))
+```
+
+# A Numeric Variable and a Factor (Categorical) Variable
+We usually compare the distributions of the numeric variable across different values of the factor. geom_jitter() constructs parallel boxplots across the factor
+```{r}
+# Suppose we want to know the home run rates defined by HR / AB and how they change over different eras for our Hall of Fame players
+
+# add a new variable hr_rate to the data frame
+hof <- mutate(hof, hr_rate = HR / AB)
+
+# Parallel stripcharts; height = 0.1 to reduce amount of vertical jitter of the points
+ggplot(hof, aes(hr_rate, Era)) +
+  geom_jitter(height = 0.1)
+
+# Parallel boxplots; coord_flip() flips the axes and displays the boxplots horizontally
+ ggplot(hof, aes(Era, hr_rate)) +
+  geom_boxplot() + coord_flip()
+```
+
+# 3.7 Comparing Ruth, Aaron, Bonds, and A-Rod
+
+Write a new function get_birthyear() to get this information for an arbitrary player of interest. In MLB, a player’s age for a season is defined to be his age on June 30. To adjust a player’s birth year to see if his birthday falls in the first six months or not, adjusted birth year is stored in the variable birthyear. 
+```{r}
+library(Lahman)
+
+# We will extract the player id and the birth year for a particular player. 
+
+# The ifelse() function is useful for assignments based on a condition; if birthMonth >= 7isTRUE,thenbirthyear <- birthYear + 1,otherwisebirthyear <- birthyear
+get_birthyear <- function(Name) {
+  Names <- unlist(strsplit(Name, " "))
+  Master %>%
+    filter(nameFirst == Names[1],
+           nameLast == Names[2])  %>%
+    mutate(birthyear = ifelse(birthMonth >= 7,
+                              birthYear + 1, birthYear),
+           Player = paste(nameFirst, nameLast)) %>%
+    select(playerID, Player, birthyear)
+}
+
+# get_birthyear() gets information for the players of interest. bind_rows() combines the players’ info into a single df, PlayerInfo.
+PlayerInfo <- bind_rows(get_birthyear("Babe Ruth"),
+                        get_birthyear("Hank Aaron"),
+                        get_birthyear("Barry Bonds"),
+                        get_birthyear("Alex Rodriguez")
+               )
+
+
+# Now that we have player id and birth years, create data frames for each of these four players. inner_join() gets the batting and age data, to match the rows of the batting data to those corresponding in the PlayerInfo df where playerID is equal. We create a new variable Age defined to be the season year minus the player’s birth year. New variable CHR contains the cumulative count of home runs for each player each season
+Batting %>%
+  inner_join(PlayerInfo, by = "playerID") %>%
+  mutate(Age = yearID - birthyear) %>%
+  select(Player, Age, HR) %>%
+  group_by(Player) %>%
+  mutate(CHR = cumsum(HR)) -> HRdata
+
+# plot  
+ggplot(HRdata, aes(x = Age, y = CHR, linetype = Player)) +
+  geom_line()
+```
+
+# The 1998 Home Run Race
 
