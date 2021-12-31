@@ -20,11 +20,105 @@ tail(Teams, 3) # Teams table shows seasonal stats for MLB teams going back to th
 ```
 
 ```{r}
-# new data frame w/ 5 columns of interest. filter() here focuses on seasons since 2001
+# new data frame w/ 5 columns of interest. filter() allows us to focus on seasons since 2001
 my_teams <- Teams %>%
   filter(yearID > 2000) %>%
   select(teamID, yearID, lgID, G, W, L, R, RA)
 my_teams %>%
   tail()
+
+# run differential - Difference between the runs scored and the runs allowed by a team.
+my_teams <- my_teams %>%
+  mutate(RD = R - RA, Wpct = W / (W + L)) # add 2 new variables to my_team: RD (run differential) and Wpct (winning percentage)
+
+# scatterplot for RD and Wpct (we will add to this)
+run_diff <- ggplot(my_teams, aes(x = RD, y = Wpct)) +
+  geom_point() +
+  scale_x_continuous("Run differential") +
+  scale_y_continuous("Winning percentage")
+run_diff
+```
+
+# 4.3 Linear Regression
+
+One way to predict a team's winning prectanae using runs scored and allowed is linear regression $$Wpct = a + b × RD + ε,$$
+
+* Wpct is the variable of interest (dependent/response variable)
+
+* All the right-hand-side (RHS) variables (independent variables) influence Wpct in determining how much each variable correlates to Wpct. a and b are unknown constants and ε is the error term that captures all other factors influencing the response variable
+
+```{r}
+# lm() allows us to run linear models
+linfit <- lm(Wpct ~ RD, data = my_teams)
+linfit
+
+# plot shows a strong, positive relationship—teams w/ large run differentials are more likely ro be winning
+run_diff +
+  geom_smooth(method = "lm", se = FALSE, color = "blue")
+```
+
+The linear regression equation is $Wpct = 0.499994 + 0.000626 × RD$. 
+
+* A team with a run differential of zero (RD = 0) will win half of its games (estimated intercept ≈ .500). 
+
+* a one-unit increase in run differential corresponds to an increase of 0.000626 in winning percentage
+
+* a team scoring 750 runs and allowing 750 runs is predicted to win half of its games corresponding to 81 games in a typical MLB season of 162 games. In contrast, a team scoring 760 runs and allowing 750 has a run differential of +10 and is predicted to have a winning percentage of 0.500+10·0.000626 ≈ 0.506. A winning percentage of 0.506 in a 162-game schedule corresponds to 82 wins.
+
+Once we have a fitted model, use augment() to calculate the predicted values from the model, as well as the residuals, which measure the difference between the response values and the fitted values. The residual plot is a representation of how close each data point is vertically from the graph of the prediction equation from the model. $Residual = Observed – Predicted$. A good residual plot consists of: 
+
+* symmetrically distributed values, tending to cluster towards the middle of the plot.
+
+* values clustered around the lower single digits of the y-axis (e.g., 0.5 or 1.5, not 30 or 150).
+
+* in general, there aren’t any clear patterns.
+```{r}
+library(broom)
+my_teams_aug <- augment(linfit, data = my_teams)
+
+# set up residual plot for run differential
+base_plot <- ggplot(my_teams_aug, aes(x = RD, y = .resid)) +
+  geom_point(alpha = 0.3) +
+  geom_hline(yintercept = 0, linetype = 3) +
+  xlab("Run differential") + ylab("Residual")
+
+# gets 4 teams with the largest residuals(farthest values away from predictor line)
+highlight_teams <- my_teams_aug %>%
+  arrange(desc(abs(.resid))) %>%
+  head(4)
+
+# ggrepel adds labels gotten from highlight_teams
+library(ggrepel)
+base_plot +
+  geom_point(data = highlight_teams, color = "blue") +
+  geom_text_repel(data = highlight_teams, color = "blue",
+                  aes(label = paste(teamID, yearID)))
+```
+Residuals here are interpreted as the error of the linear model in predicting the actual winning percentage. Points farthest from the zero line correspond to the teams where the linear model fared worst in predicting the winning percentage.
+
+The 2006 Cleveland Indians, with a +88 run differential, were supposed to have a 0.555 team according to the linear equation, but they actually finished at 0.481, corresponding to the residual 0.481 − 0.555 = −0.073, or −11.8 games.
+
+We want to see if errors are normally distributed. The average value of the residuals for any least squares linear model is equal to zero. This means that we want our model to be unbiased in that the model predictions are equally likely to overestimate and underestimate the winning percentage.
+```{r}
+# checking for bias using RMSE (root mean squared error)
+resid_summary <- my_teams_aug %>%
+  summarize(N = n(), avg = mean(.resid),
+            RMSE = sqrt(mean(.resid^2)))
+resid_summary
+```
+
+If the errors are normally distributed, approximately two thirds of the residuals fall between −RMSE and +RMSE, while 95% of the residuals are between −2·RMSE and 2·RMSE.
+```{r}
+# confirmation of statement above; n() and summarize() obtain the number of rows of a data frame. In the numerators of the expressions, we obtain the number of residuals (computed using the abs() function) that are smaller than one and two RMSE
+rmse <- resid_summary %>%
+  pull(RMSE)
+
+# The computed fractions are close to the theoretical 68% and 95% values stated above
+my_teams_aug %>%
+  summarize(N = n(),
+            within_one = sum(abs(.resid) < rmse),
+            within_two = sum(abs(.resid) < 2 * rmse)) %>%
+  mutate(within_one_pct = within_one / N,
+         within_two_pct = within_two / N)
 ```
 
