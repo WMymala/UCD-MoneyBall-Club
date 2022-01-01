@@ -171,7 +171,6 @@ PlayerInfo <- bind_rows(get_birthyear("Babe Ruth"),
                         get_birthyear("Alex Rodriguez")
                )
 
-
 # Now that we have player id and birth years, create data frames for each of these four players. inner_join() gets the batting and age data, to match the rows of the batting data to those corresponding in the PlayerInfo df where playerID is equal. We create a new variable Age defined to be the season year minus the player’s birth year. New variable CHR contains the cumulative count of home runs for each player each season
 Batting %>%
   inner_join(PlayerInfo, by = "playerID") %>%
@@ -238,4 +237,11 @@ ggplot(hr_ytd, aes(Date, cumHR, linetype = nameLast)) +
   ylab("Home Runs in the Season")
 ```
 
+What's the big picture?: We can do HELLA visualization with ggplot.
+
+* For categorical variables: 1D scatterplots & Histograms
+
+* For numeric variables: Scatterplots
+
+* For categorical variables: Bar Graphs (parallel bar graphs), Dot Plots, Parallel stripcharts
 

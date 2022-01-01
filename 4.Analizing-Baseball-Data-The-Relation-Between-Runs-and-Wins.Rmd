@@ -122,3 +122,34 @@ my_teams_aug %>%
          within_two_pct = within_two / N)
 ```
 
+# 4.4 The Pythagorean Formula for Winning Percentage
+
+Bill James, the godfather of sabermetrics, derived this non-linear formula to estimate winning percentage: $$Wpct = \frac{R2}{R^2 + {RA}^2}$$
+```{r}
+# adding Pythagorean expectation (name of the formula) to df 
+my_teams <- my_teams %>%
+  mutate(Wpct_pyt = R ^ 2 / (R ^ 2 + RA ^ 2))
+
+# residuals_pyt is the difference between the actual and predicted winning percentages
+my_teams <- my_teams %>%
+  mutate(residuals_pyt = Wpct - Wpct_pyt)
+# residuals need to be calculated explicitly; we compare RMSE (root-Mean squared error) for new predictions
+my_teams %>%
+  summarize(rmse = sqrt(mean(residuals_pyt^2)))
+```
+
+RMSE calculated on the Pythagorean predictions is similar in value to the one calculated with the linear predictions. They have similar rmses but the non-linear has better properties how predicting scenarios. For example, a team has pitchers who never allow runs, while the hitters always manage to score the only run they need. They score 162 runs in a season and win all of their games, but the linear equation would predict them to be merely a .601 team. The Pythagorean model instead correctly predicts that this team will win all of games.
+
+Going back to the Pythagorean model, $$Wpct = \frac{R^2}{R%2 + {RA}^2}$$, it turns out 2 isn't the best exponent that would give the best fit for our dataframe and it's actually 1.85 instead. 
+
+Optional (read this but don't have to): We rewrite formula as $$Wpct = {\frac{W}{W+L}}\frac{R^k}{R^k + {RA}^k$$
+```{r}
+# R output suggests a best-fit Pythagorean exponent of 1.85
+my_teams <- my_teams %>%
+  mutate(logWratio = log(W / L),
+         logRratio = log(R / RA))
+pytFit <- lm(logWratio ~ 0 + logRratio, data = my_teams)
+pytFit
+```
+
+

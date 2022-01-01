@@ -211,5 +211,6 @@ hr_60 %>%
 head(hr_60, 4) # Harmon Killebrew, Hank Aaron, Willie Mays, and Frank Robinson were the top HR hitters in the 1960s
 ```
 
+What's the big picture?:  We have dataset(s) to work with. We can use the tidyverse data to pull out specific data that we have questions on like: "If Shohei Ohtani were to focus on only pitching or batting, which one should he choose/be more effective in?" We can also do data visualization with ggplot to support your claim.
 
 
