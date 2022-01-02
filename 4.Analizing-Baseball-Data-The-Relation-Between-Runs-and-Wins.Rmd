@@ -6,6 +6,14 @@ output: html_document
 
 Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
 
+Download Files for code at: https://github.com/beanumber/baseball_R > Code (Green Button) > Download
+
+Files used: 
+
+* game_log_header.csv
+
+* 
+
 # Chapter 4
 
 Stats really don't mean anything if you can't win. You cannot just compare player stats to determine who is better. If that was the case, Russell Westbrook would be the GOAT but in reality he is a rebound and assist merchant, aka a FRAUD.
@@ -142,14 +150,110 @@ RMSE calculated on the Pythagorean predictions is similar in value to the one ca
 
 Going back to the Pythagorean model, $$Wpct = \frac{R^2}{R%2 + {RA}^2}$$, it turns out 2 isn't the best exponent that would give the best fit for our dataframe and it's actually 1.85 instead. 
 
-Optional (read this but don't have to): We rewrite formula as $$Wpct = {\frac{W}{W+L}}\frac{R^k}{R^k + {RA}^k$$
+***** Optional things: (read this but don't have to): We rewrite formula as $$Wpct = {\frac{W}{W+L}}\frac{R^k}{R^k + {RA}^k$$ to get $$log(\frac{W}{L}) = k • log(\frac{R}{RA})$$ where $log(\frac{W}{L})$ is percentage of wins and losses. $k • log(\frac{R}{RA})$ is exponent times runs divided by percentage of runs over runs allowed.
 ```{r}
-# R output suggests a best-fit Pythagorean exponent of 1.85
+# add percent win rate and percent runs to runs allowed as variables
 my_teams <- my_teams %>%
   mutate(logWratio = log(W / L),
          logRratio = log(R / RA))
+
+# specify a model with a zero y-intercept by adding a zero term on the RHS
 pytFit <- lm(logWratio ~ 0 + logRratio, data = my_teams)
-pytFit
+pytFit # output says a best-fit Pythagorean exponent of 1.85
 ```
+*****
+
+Ex) The 2011 Boston Red Sox scored 875 runs, while allowing 737. According to the Pythagorean model with exponent 2, they were expected to win 95 games, but won 91. Pythagorean model isn't completly accurate in all cases.
+```{r}
+# gl2011.txt gives info on every game played in the 2011 season
+glheaders <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/baseball_R-master/data/game_log_header.csv")
+gl2011 <- read_csv("/Users/yeezywally_510/Desktop/MoneyBall/baseball_R-master/data/gl2011.txt",
+                   col_names = names(glheaders),
+                   na = character())
+# commands select the lines pertaining to the Red Sox games and keep only the columns related to runs
+BOS2011 <- gl2011 %>%
+  filter(HomeTeam == "BOS" | VisitingTeam == "BOS") %>%
+  select(VisitingTeam, HomeTeam,
+         VisitorRunsScored, HomeRunsScore)
+head(BOS2011)
+
+# calculate run differentials (ScoreDiff) both for games won and lost and add a column W for if the Red Sox won the game
+BOS2011 <- BOS2011 %>%
+  mutate(ScoreDiff = ifelse(HomeTeam == "BOS", HomeRunsScore - VisitorRunsScored,
+VisitorRunsScored - HomeRunsScore), W = ScoreDiff > 0)
+
+# compute summary statistics on the run differentials for games won and for games lost. group_by() specifies grouping factor (i.e., whether the game resulted in a win for Boston). skim() takes a variable name and computes a host of relevant summary statistics
+library(skimr)
+BOS2011 %>%
+  group_by(W) %>%
+  skim(ScoreDiff)
+```
+The 2011 Red Sox had their victories decided by a larger margin than their losses (4.3 vs -3.5 runs on average), leading to underperformance of the Pythagorean prediction by five games. A team overperforming (or underperforming) its Pythagorean winning percentage is often seen as being lucky (or unlucky), and is expected to get closer to its expected line as the season progresses.
+
+A team can overperform its Pythagorean winning percentage by winning a disproportionate number of close games
+```{r}
+# winner variable contains the abbreviation of the winning team and second variable diff contains the margin of victory
+results <- gl2011 %>%
+  select(VisitingTeam, HomeTeam,
+         VisitorRunsScored, HomeRunsScore) %>%
+  mutate(winner = ifelse(HomeRunsScore > VisitorRunsScored,
+                         HomeTeam, VisitingTeam),
+         diff = abs(VisitorRunsScored - HomeRunsScore))
+
+# one_run_wins contains only the games decided by one run (we want games that are close). n() counts the number of wins in these games for each team
+one_run_wins <- results %>%
+  filter(diff == 1) %>%
+  group_by(winner) %>%
+  summarize(one_run_w = n())
+
+# look at the relation between the Pythagorean residuals and the number of one-run victories. the team abbreviation for the Angels needs to be changed because it is coded as "LAA" in the Lahman database and as "ANA" in the Retrosheet game logs
+teams2011 <- my_teams %>%
+  filter(yearID == 2011) %>%
+  mutate(teamID = ifelse(teamID == "LAA", "ANA",
+                         as.character(teamID))) %>%
+  inner_join(one_run_wins, by = c("teamID" = "winner"))
+
+# plot
+ggplot(data = teams2011, aes(x = one_run_w, y = residuals_pyt)) +
+  geom_point() +
+  geom_text_repel(aes(label = teamID)) +
+  xlab("One run wins") + ylab("Pythagorean residuals")
+```
+
+* San Francisco had a large number of one-run victories and a large positive Pythogorean residual. In contrast, San Diego had few one-run victories and a negative residual (poverty xD)
+
+* Winning a disproportionate number of close games is sometimes attributed to plain luck, but might be teams with superior closers are able to overperform their Pythagorean E(winning %)
+```{r}
+# filter() selects the pitcher-seasons where more than 50 games were finished by a pitcher with an ERA lower than 2.50. df top_closers has only the columns of the pitcher, the season, and the team
+top_closers <- Pitching %>%
+  filter(GF > 50 & ERA < 2.5) %>%
+  select(playerID, yearID, teamID)
+
+# merge the top_closers data frame with our my_teams dataset, cre- ating a data frame that contains the teams featuring a top closer. Then use summary statistics
+my_teams %>%
+  inner_join(top_closers) %>%
+  pull(residuals_pyt) %>%
+  summary()
+```
+
+# 4.5 How many runs for a Win?
+
+Ten-runs-equal-one-win rule of thumb: ex) Suppose a team scores an average of five runs per game, while allowing the same number of runs. In a 162-game season, the team would score (and allow) 810 runs. Inserting 810 in the Pythagorean formula one gets (as expected) a perfect .500 expected winning percentage with 81 wins.
+
+Similar formula to Pythagorean formula: $$W = G • \frac{R^2}{R^2 + {RA}^2}$$
+
+The book does some boring proofs and code, but what's important is 
+
+* the rule of ten is appropriate in typical run scoring environments (4 to 5 runs per game). 
+
+* However, in very low scoring environments (> 4 runs per game), a lower number of runs is needed to gain an extra win; 
+
+* in high scoring environments (< 5 runs per game), one needs a larger number of runs for an added win.
+
+What's the big picture?: Linear regression lm() can be used to predict the value of interest using predictor variables but beware because it isn't always accurate! That's because there are residuals (errors like luck that affect the predicted value). The Pythagorean model $$Wpct = {\frac{W}{W+L}}\frac{R^k}{R^k + {RA}^k$$ is mostly accurate for predicting models except it isn't foolproof either because it doesn't take into account luck, close games, closer skill, etc.
+
+No model for predicting is perfect basically
+
+
 
 

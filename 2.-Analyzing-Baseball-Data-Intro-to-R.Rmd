@@ -8,6 +8,12 @@ Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
 
 Link for the book if you really want to read it (totally optional): https://libgen.is/book/index.php?md5=AA1AE52B2BA2B01497FACAD2B7E4807F
 
+Download Files for code at: https://github.com/beanumber/baseball_R > Code (Green Button) > Download
+
+Files used: 
+
+* spahn.csv
+
 # Intro
 
 Lahman is a database w/ pitching, hitting, and fielding statistics for the entire history of professional baseball from 1871 to the current. csvs in Lahman on pp. 4 Analyzing Baseball Data.
@@ -211,6 +217,8 @@ hr_60 %>%
 head(hr_60, 4) # Harmon Killebrew, Hank Aaron, Willie Mays, and Frank Robinson were the top HR hitters in the 1960s
 ```
 
-What's the big picture?:  We have dataset(s) to work with. We can use the tidyverse data to pull out specific data that we have questions on like: "If Shohei Ohtani were to focus on only pitching or batting, which one should he choose/be more effective in?" We can also do data visualization with ggplot to support your claim.
+What's the big picture?:  We have dataset(s) to work with. We can use tidyverse code to pull out specific data that we have to help us questions answer questions like: "If Shohei Ohtani were to focus on only pitching or batting, which one should he choose/be more effective in?" 
+
+We can also do data visualization with ggplot to support your claim.
 
 

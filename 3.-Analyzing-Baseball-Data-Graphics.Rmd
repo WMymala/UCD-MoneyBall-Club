@@ -6,6 +6,16 @@ output: html_document
 
 Book: Analyzing Baseball Data with R (Second Edition) - Chapman and Hall
 
+Download Files for code at: https://github.com/beanumber/baseball_R > Code (Green Button) > Download
+
+Files used: 
+
+* hofbatting.csv
+
+* fields.csv
+
+* all1998.csv
+
 # Chapter 3
 
 ```{r}
