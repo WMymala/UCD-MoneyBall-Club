@@ -38,8 +38,8 @@ Teams %>% head(5) # seasonal data at the team level going back to 1871.
 # 2.4 Data Frames
 
 ```{r}
-spahn <- read.csv("/Users/yeezywally_510/Desktop/MoneyBall/spahn.csv") # read dataset
-#View(spahn_data)
+spahn <- read.csv("~/Desktop/MoneyBall/spahn.csv", header=TRUE) # read dataset
+View(spahn)
 class(spahn) # dataframe (df) - rectangular table of data, rows usually correspond to different observations, and columns of the table correspond to different variables collected on the observations.
 ```
 
@@ -104,13 +104,14 @@ plot(Age, Win.Pct)
 ```{r}
 # Vector Index
 W[c(1, 2, 5)] # extract portions of vectors
-W[1:4]
+W[1:5]
 W[-c(1, 6)] # w/ minus index, we remove vector indicies
 
 # Logical variable, either have >, < or =
 Win.Pct > 60 # prints TRUE or FALSE
 Win.Pct == max(Win.Pct)
 Year[W + L > 30]
+Year[Win.Pct > 60]
 ```
 
 # 2.6 Objects and Containers in R
@@ -133,6 +134,8 @@ N_Games <- c(5, 6, 5, 7, 4, 7, 7, 5, 7, 7)
 WS_results <- tibble(
   Year = Year, NL_Team = NL, AL_Team = AL,
   N_Games = N_Games, Winner = Winner)
+
+WS_results$Team = ifelse(WS_results$Winner == "NL", WS_results$NL_Team, WS_results$AL_Team)
 WS_results
 ```
 
